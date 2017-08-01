@@ -39,7 +39,8 @@ namespace BlackScreen
             {
                 Icon = Properties.Resources.Monitor_02,
                 Visible = true,
-                ContextMenu = _contextMenu
+                ContextMenu = _contextMenu,
+                Text = "Black Screen"
             };
             this.Hide();
             this.WindowState = WindowState.Minimized;
@@ -129,6 +130,7 @@ namespace BlackScreen
                         try
                         {
                             new Thread(() => { block(); }).Start();
+                            s = false;
                         }
                         catch { System.Windows.MessageBox.Show("Error"); }
                     }
@@ -166,6 +168,22 @@ namespace BlackScreen
             Stop();
         }
 
+        private void _time()
+        {           
+            while (true)
+            {                
+                var src = DateTime.Now;
+                var dt = src.Hour.ToString() + ":" + src.Minute.ToString();
+
+                Dispatcher.Invoke(() =>
+                {
+                    time_text.Content = dt;
+                });
+
+                Thread.Sleep(60000);
+            }
+        }
+
         private void _timer()
         {
             int timer = 0;
@@ -189,7 +207,7 @@ namespace BlackScreen
         }
 
         private void Start()
-        {          
+        {
             context = InterceptionDriver.CreateContext();
 
             if (context != IntPtr.Zero)
@@ -202,7 +220,17 @@ namespace BlackScreen
                 callbackThread.Start();
             }
 
-            new Thread(() => { _timer(); }).Start();
+            Thread tmr = new Thread(_timer)
+            {
+                IsBackground = true
+            };
+            tmr.Start();
+
+            Thread tm = new Thread(_time)
+            {
+                IsBackground = true
+            };
+            tm.Start();
         }
 
         private void block()
@@ -236,12 +264,8 @@ namespace BlackScreen
 
             ni.Dispose();
 
-            Process.GetCurrentProcess().Kill();
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            Stop();
-        }
+            Dispatcher.Invoke(() => { this.Close(); });
+            //Process.GetCurrentProcess().Kill();
+        }        
     }
 }
