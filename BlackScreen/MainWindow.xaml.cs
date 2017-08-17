@@ -129,7 +129,10 @@ namespace BlackScreen
                     {
                         try
                         {
-                            new Thread(() => { block(); }).Start();
+                            Thread blk = new Thread(block);
+                            blk.IsBackground = true;
+                            blk.Start();
+                            
                             s = false;
                         }
                         catch { System.Windows.MessageBox.Show("Error"); }
@@ -141,7 +144,9 @@ namespace BlackScreen
                         {
                             try
                             {
-                                new Thread(() => { unblock(); }).Start();
+                                Thread unblk = new Thread(unblock);
+                                unblk.IsBackground = true;
+                                unblk.Start();                                
                             }
                             catch { System.Windows.MessageBox.Show("Error"); }
                             s = true;
