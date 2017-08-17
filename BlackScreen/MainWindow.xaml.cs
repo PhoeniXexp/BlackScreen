@@ -27,6 +27,8 @@ namespace BlackScreen
     {
         NotifyIcon ni;
 
+        private bool sc2 = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -44,8 +46,28 @@ namespace BlackScreen
             };
             this.Hide();
             this.WindowState = WindowState.Minimized;
-            
+
+            ScreenInit();
+
             Start();
+        }
+
+        private void ScreenInit()
+        {
+            Screen[] sc = Screen.AllScreens;
+
+            System.Drawing.Rectangle r1 = sc[0].WorkingArea;
+            black_sc1.Top = r1.Top;
+            black_sc1.Left = r1.Left;
+
+            if (sc.Count() > 1)
+            {
+                sc2 = true;
+                System.Drawing.Rectangle r2 = sc[1].WorkingArea;
+                black_sc2.Top = r2.Top;
+                black_sc2.Left = r2.Left;
+            }
+
         }
 
         private void _exitMenu(object sender, EventArgs e)
@@ -63,6 +85,9 @@ namespace BlackScreen
 
         private bool user_out = false;
         private bool _lock = false;
+
+        private black_wind black_sc1 = new black_wind();
+        private black_wind black_sc2 = new black_wind();
 
         private void hook()
         {
@@ -171,23 +196,7 @@ namespace BlackScreen
             }
 
             Stop();
-        }
-
-        private void _time()
-        {           
-            while (true)
-            {                
-                var src = DateTime.Now;
-                var dt = src.Hour.ToString() + ":" + src.Minute.ToString();
-
-                Dispatcher.Invoke(() =>
-                {
-                    time_text.Content = dt;
-                });
-
-                Thread.Sleep(60000);
-            }
-        }
+        }        
 
         private void _timer()
         {
@@ -230,12 +239,6 @@ namespace BlackScreen
                 IsBackground = true
             };
             tmr.Start();
-
-            Thread tm = new Thread(_time)
-            {
-                IsBackground = true
-            };
-            tm.Start();
         }
 
         private void block()
@@ -243,10 +246,20 @@ namespace BlackScreen
             Dispatcher.Invoke(() =>
             {
                 _lock = true;
-                this.Show();
-                this.Topmost = true;
-                this.WindowState = WindowState.Maximized;
-                this.Cursor = System.Windows.Input.Cursors.None;
+
+                black_sc1.Show();
+                black_sc1.Topmost = true;
+                black_sc1.WindowState = WindowState.Maximized;
+                black_sc1.Cursor = System.Windows.Input.Cursors.None;
+
+                if (sc2)
+                {
+                    black_sc2.Show();
+                    black_sc2.Topmost = true;
+                    black_sc2.WindowState = WindowState.Maximized;
+                    black_sc2.Cursor = System.Windows.Input.Cursors.None;
+                }
+
             });
         }
 
@@ -255,8 +268,15 @@ namespace BlackScreen
             Dispatcher.Invoke(() =>
             {
                 _lock = false;
-                this.Hide();
-                this.WindowState = WindowState.Minimized;
+
+                black_sc1.Hide();
+                black_sc1.WindowState = WindowState.Minimized;
+
+                if (sc2)
+                {
+                    black_sc2.Hide();
+                    black_sc2.WindowState = WindowState.Minimized;
+                }
             });
         }
 
@@ -269,8 +289,12 @@ namespace BlackScreen
 
             ni.Dispose();
 
-            Dispatcher.Invoke(() => { this.Close(); });
-            //Process.GetCurrentProcess().Kill();
+            Dispatcher.Invoke(() =>
+            {
+                black_sc1.Close();
+                black_sc2.Close();
+                this.Close();
+            });
         }        
     }
 }
