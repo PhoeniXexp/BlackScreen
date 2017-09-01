@@ -28,14 +28,18 @@ namespace BlackScreen
         NotifyIcon ni;
 
         private bool sc2 = false;
+        private bool _timeout = false;
+
+        System.Windows.Forms.ContextMenu _contextMenu;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            System.Windows.Forms.ContextMenu _contextMenu = new System.Windows.Forms.ContextMenu();
+            _contextMenu = new System.Windows.Forms.ContextMenu();
 
             _contextMenu.MenuItems.Add("Выход", new EventHandler(_exitMenu));
+            _contextMenu.MenuItems.Add("Таймаут", new EventHandler(_timeMenu));            
 
             ni = new NotifyIcon()
             {
@@ -73,6 +77,20 @@ namespace BlackScreen
         private void _exitMenu(object sender, EventArgs e)
         {
             Stop();
+        }
+
+        private void _timeMenu(object sender, EventArgs e)
+        {
+            if (_timeout)
+            {
+                _timeout = false;
+                _contextMenu.MenuItems[1].Checked = false;
+            }
+            else
+            {
+                _timeout = true;
+                _contextMenu.MenuItems[1].Checked = true;
+            }
         }
 
         private Thread callbackThread;
@@ -201,13 +219,19 @@ namespace BlackScreen
         private void _timer()
         {
             int timer = 0;
+            int _tout = 6;
+
             while (true)
             {
-                Thread.Sleep(10000);
+                Thread.Sleep(10000);                
+
+                if (_timeout) _tout = 6 * 5;
+                if (!_timeout) _tout = 6;
+
                 if (user_out)
                 {
                     timer++;
-                    if (timer == 6)
+                    if (timer == _tout)
                     {
                         block();
                     }

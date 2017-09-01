@@ -40,11 +40,16 @@ namespace BlackScreen
             while (true)
             {
                 var src = DateTime.Now;
-                var dt = src.Hour.ToString() + ":" + src.Minute.ToString();
+                var tmp = src.Minute.ToString();
+
+                if (tmp.Length == 1) tmp = "0" + tmp;
+
+                var dt = src.Hour.ToString() + ":" + tmp;
 
                 Dispatcher.Invoke(() =>
                 {
                     time_text.Content = dt;
+                    this.Topmost = true;
                 });
 
                 Thread.Sleep(60000);

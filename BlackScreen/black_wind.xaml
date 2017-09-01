@@ -9,11 +9,11 @@
     <Window.Background>
         <ImageBrush>
             <ImageBrush.ImageSource>
-                <BitmapImage UriSource="pack://application:,,,/Resources/image.jpg"/>
+                <BitmapImage UriSource="pack://application:,,,/Resources/image2.png"/>
             </ImageBrush.ImageSource>
         </ImageBrush>
     </Window.Background>
     <Grid>
-        <Label x:Name="time_text" Content="" HorizontalAlignment="Right" Height="30" Margin="0,50,50,0" VerticalAlignment="Top" Width="60" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Foreground="#FFADDAEC"/>
+        <Label x:Name="time_text" Content="" HorizontalAlignment="Right" Height="30" Margin="0,50,50,0" VerticalAlignment="Top" Width="60" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Foreground="#FFF5FBFA"/>
     </Grid>
 </Window>
