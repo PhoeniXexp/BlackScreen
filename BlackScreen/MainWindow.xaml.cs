@@ -90,6 +90,38 @@ namespace BlackScreen
             {
                 _timeout = true;
                 _contextMenu.MenuItems[1].Checked = true;
+                Thread _tmrtm = new Thread(timer_timeMenu);
+                _tmrtm.IsBackground = true;
+                _tmrtm.Start();
+            }
+        }
+
+        private void timer_timeMenu()
+        {
+            int timer = 0;
+            bool inf = true;
+
+            while (inf)
+            {
+                Thread.Sleep(60000);                
+
+                if (_timeout)
+                {
+                    timer++;
+                    if (timer == 60)
+                    {
+                        _timeout = false;
+                        Dispatcher.Invoke(() => { _contextMenu.MenuItems[1].Checked = false; });
+                        inf = false;
+                        break;
+                    }
+                }
+                else
+                {
+                    timer = 0;
+                    inf = false;
+                    break;
+                }
             }
         }
 
