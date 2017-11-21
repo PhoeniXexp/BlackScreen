@@ -191,7 +191,7 @@ namespace BlackScreen
 
                     user_out = false;
 
-                    if (stroke.Key.Code == Keys.WindowsKey)
+                    if ((stroke.Key.Code == Keys.WindowsKeyLeft) | (stroke.Key.Code == Keys.WindowsKeyRight)) 
                     {
                         if (stroke.Key.State == KeyState.E0)
                         {
@@ -333,6 +333,8 @@ namespace BlackScreen
                     black_sc2.Hide();
                     black_sc2.WindowState = WindowState.Minimized;
                 }
+
+                ScreenInit();
             });
         }
 
