@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="black_wind" Height="100" Width="250" ResizeMode="NoResize" WindowStyle="None" ShowInTaskbar="False">
     <Window.Background>
-        <ImageBrush>
+        <ImageBrush x:Name="imagebrush">
             <ImageBrush.ImageSource>
                 <BitmapImage UriSource="pack://application:,,,/Resources/image2.png"/>
             </ImageBrush.ImageSource>

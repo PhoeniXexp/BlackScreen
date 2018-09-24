@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -34,11 +36,73 @@ namespace BlackScreen
             };
             tm.Start();
         }
+        
+        private Bitmap bmp = Properties.Resources.image2;
+
+        private void interf()
+        {
+            imgpush(imgrand(10));
+            Thread.Sleep(100);
+            imgpush(imgrand(8));
+            Thread.Sleep(100);
+            imgpush(imgrand(6));
+            Thread.Sleep(100);
+            imgpush(imgrand(4));
+            Thread.Sleep(100);
+            imgpush(imgrand(6));
+            Thread.Sleep(100);
+            imgpush(imgrand(8));
+            Thread.Sleep(100);
+            imgpush(imgrand(10));
+            Thread.Sleep(100);
+            imgpush(bmp);
+        }
+
+        private Bitmap imgrand(int k)
+        {
+            var bitmap = new Bitmap(bmp);
+            Random rnd = new Random();
+
+            for (int i = 0; i < bitmap.Width; i++)
+            {
+                for (int j = 0; j < bitmap.Height; j++)
+                {
+                    System.Drawing.Color color = bitmap.GetPixel(i, j);
+                    byte r = (byte)(rnd.Next(0, k) == 1 ? 255 : color.R);
+                    byte b = (byte)(rnd.Next(0, k) == 1 ? 255 : color.B);
+                    byte g = (byte)(rnd.Next(0, k) == 1 ? 255 : color.G);
+
+                    bitmap.SetPixel(i, j, System.Drawing.Color.FromArgb(255, r, g, b));
+                }
+            }
+            return bitmap;
+        }
+
+        private void imgpush(Bitmap b)
+        {
+            Dispatcher.Invoke(() =>
+            {
+
+                using (MemoryStream memory = new MemoryStream())
+                {
+                    b.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                    memory.Position = 0;
+                    BitmapImage bitmapimage = new BitmapImage();
+                    bitmapimage.BeginInit();
+                    bitmapimage.StreamSource = memory;
+                    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapimage.EndInit();
+
+                    imagebrush.ImageSource = bitmapimage;
+                }
+            });
+        }
 
         private void _time()
         {
             while (true)
             {
+                
                 var src = DateTime.Now;
                 var tmp = src.Minute.ToString();
 
@@ -51,8 +115,10 @@ namespace BlackScreen
                     time_text.Content = dt;
                     this.Topmost = true;
                 });
-
+                
                 Thread.Sleep(60000);
+
+                //interf();
             }
         }
     }

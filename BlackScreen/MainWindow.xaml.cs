@@ -224,7 +224,7 @@ namespace BlackScreen
                                 unblk.Start();                                
                             }
                             catch { System.Windows.MessageBox.Show("Error"); }
-                            s = true;
+                           
                         }
                     }
 
@@ -301,6 +301,8 @@ namespace BlackScreen
         {
             Dispatcher.Invoke(() =>
             {
+                ScreenInit();
+
                 _lock = true;
 
                 black_sc1.Show();
@@ -333,8 +335,6 @@ namespace BlackScreen
                     black_sc2.Hide();
                     black_sc2.WindowState = WindowState.Minimized;
                 }
-
-                ScreenInit();
             });
         }
 
